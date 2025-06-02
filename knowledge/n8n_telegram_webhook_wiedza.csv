@@ -1,0 +1,49 @@
+Kategoria,Podkategoria,Opis
+Problem,Identyfikacja błędu,Telegram Bot API wymaga HTTPS URL dla webhook - wyskakuje błąd "bad webhook: An HTTPS URL must be provided for webhook"
+Problem,Przyczyna błędu,n8n na serwerze Mikrus generował HTTP webhook URLs zamiast HTTPS co jest nieakceptowane przez Telegram API
+Problem,Ograniczenia HTTP,Telegram Bot API kategorycznie nie akceptuje HTTP webhook URLs nawet w trybie deweloperskim lub testowym
+Rozwiązanie,Podejście hybrydowe,Skonfigurowano rozwiązanie gdzie główny n8n działa na HTTP ale webhook dla Telegram używa HTTPS przez Cloudflare Tunnel
+Rozwiązanie,Cloudflare Tunnel,Użyto bezpłatnego Cloudflare Tunnel (trycloudflare.com) do stworzenia HTTPS tunelu dla n8n
+Rozwiązanie,Konfiguracja zmiennych,Ustawiono zmienne środowiskowe w n8n: WEBHOOK_URL=https://[cloudflare-domain] i N8N_EDITOR_BASE_URL=http://joanna358.mikrus.xyz:20358
+Konfiguracja serwera,Serwer Mikrus,n8n działa na serwerze joanna358.mikrus.xyz:20358 (port 20358 mapowany na 5678 w kontenerze)
+Konfiguracja serwera,Dostęp SSH,"SSH dostęp: ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz"
+Konfiguracja serwera,Docker kontener,n8n uruchomiony w kontenerze Docker z volume ~/.n8n:/home/node/.n8n dla trwałości danych
+Konfiguracja n8n,Zmienne środowiskowe podstawowe,N8N_HOST=joanna358.mikrus.xyz i N8N_PROTOCOL=http dla głównego dostępu
+Konfiguracja n8n,Zmienne środowiskowe webhook,WEBHOOK_URL=https://[cloudflare-tunnel-url] dla generowania HTTPS webhook URLs
+Konfiguracja n8n,Editor URL,N8N_EDITOR_BASE_URL=http://joanna358.mikrus.xyz:20358 dla dostępu do interfejsu
+Konfiguracja n8n,Błędna konfiguracja,NIE ustawiać N8N_PORT - powoduje konflikt portów wewnątrz kontenera (n8n musi słuchać na 5678)
+Cloudflare Tunnel,Instalacja,Pobrany cloudflared z GitHub releases i zainstalowany w /usr/local/bin/cloudflared
+Cloudflare Tunnel,Uruchomienie,"Komenda: nohup cloudflared tunnel --url http://127.0.0.1:20358 > /tmp/cloudflared.log 2>&1 & echo $! > /tmp/cloudflared.pid"
+Cloudflare Tunnel,URL generowany,Przykładowe URLs: prototype-ds-constitute-efforts.trycloudflare.com (losowo generowane przez Cloudflare)
+Cloudflare Tunnel,Weryfikacja,Sprawdzanie działania: curl -I https://[cloudflare-url] i grep 'trycloudflare.com' /tmp/cloudflared.log
+Cloudflare Tunnel,Trwałość,Tunnel jest tymczasowy i może się zmienić - wymaga aktualizacji webhook URL w Telegram po restarcie
+Telegram Bot,Konfiguracja webhook,Ustawienie webhook: curl -X POST "https://api.telegram.org/bot[TOKEN]/setWebhook" -d "url=https://[cloudflare-url]/webhook/[hash]"
+Telegram Bot,Sprawdzenie webhook,Weryfikacja: curl -s "https://api.telegram.org/bot[TOKEN]/getWebhookInfo" | python3 -m json.tool
+Telegram Bot,URL webhook format,Format: https://[cloudflare-tunnel]/webhook/[hash-z-n8n] np. prototype-ds-constitute-efforts.trycloudflare.com/webhook/99eab1a0-569d-4f0f-a49e-578a02abfe63/webhook
+Telegram Bot,Test webhook,Test URL podobnie: https://[cloudflare-tunnel]/webhook-test/[hash]/webhook
+OAuth integracje,Google Calendar,OAuth Redirect URI pozostaje na HTTP: http://joanna358.mikrus.xyz:20358/rest/oauth2-credential/callback
+OAuth integracje,Gmail API,Wszystkie OAuth integracje używają stabilnego HTTP URL nie Cloudflare tunnel
+OAuth integracje,Konfiguracja w Google Cloud,W Google Cloud Console należy ustawić Authorized redirect URI na http://joanna358.mikrus.xyz:20358/rest/oauth2-credential/callback
+OAuth integracje,Dlaczego HTTP,OAuth wymaga stabilnego URL - Cloudflare tunnel generuje losowe domeny które się zmieniają
+Bezpieczeństwo,Cloudflare Tunnel,Tunnel działa w jedną stronę (outbound) - nie otwiera portów tylko tworzy bezpieczne połączenie wychodzące
+Bezpieczeństwo,Szyfrowanie,End-to-end szyfrowanie wszystkich danych przesyłanych przez Cloudflare Tunnel
+Bezpieczeństwo,Izolacja,Tunnel pokazuje tylko n8n webhook endpoint - brak dostępu do innych usług na serwerze
+Bezpieczeństwo,Kontrola,Możliwość natychmiastowego wyłączenia tunelu przez zabicie procesu cloudflared
+Dostęp,n8n Editor,Główny dostęp do interfejsu: http://joanna358.mikrus.xyz:20358
+Dostęp,Webhook endpoint,HTTPS webhook dla Telegram: https://[cloudflare-tunnel]/webhook/[hash]
+Dostęp,API endpoint,n8n API: http://joanna358.mikrus.xyz:20358/rest/
+Dostęp,Status webhook,n8n odpowiada 404 dla nieistniejących webhook co jest normalne
+Zarządzanie,Status kontenera,docker ps - sprawdzenie czy n8n działa
+Zarządzanie,Logi n8n,docker logs n8n - sprawdzenie logów uruchomienia
+Zarządzanie,Status tunelu,ps aux | grep cloudflared - sprawdzenie czy tunnel działa
+Zarządzanie,Restart n8n,docker stop n8n && docker rm n8n && [komenda uruchomienia]
+Zarządzanie,Restart tunelu,pkill cloudflared && [komenda uruchomienia tunelu]
+Rozwiązywanie problemów,Webhook localhost,Jeśli n8n generuje localhost:5678 to znaczy że zmienne środowiskowe nie są ustawione
+Rozwiązywanie problemów,502 Bad Gateway,Błąd 502 w Cloudflare oznacza że tunnel się rozłączył lub n8n nie odpowiada
+Rozwiązywanie problemów,Długie uruchamianie,n8n może potrzebować 15-30 sekund na pełne uruchomienie po restarcie kontenera
+Rozwiązywanie problemów,Port konflikty,Nie ustawiać N8N_PORT - powoduje że n8n słucha na złym porcie wewnątrz kontenera
+Rozwiązywanie problemów,OAuth błędy,Jeśli OAuth nie działa sprawdzić czy Authorized redirect URI w Google Cloud jest na HTTP nie HTTPS
+MCP integracja,Konfiguracja,n8n API dostępne przez http://joanna358.mikrus.xyz:20358 z kluczem API
+MCP integracja,Klucz API,eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxZGJmYzE0Zi1iZDAxLTRkMWQtYjk2YS0yMzM1M2VjNTFmZmMiLCJpc3MiOiJuOG4iLCJhdWQiOiJwdWJsaWMtYXBpIiwiaWF0IjoxNzQ4NTMwMzIyfQ.UyarR8xoig9dl-9ZWPcKy2Oiw0PXtueUTflaVI6qefA
+MCP integracja,Liczba workflow,759 workflow dostępnych w systemie przez MCP
+MCP integracja,Funkcjonalności,Można listować uruchamiać i zarządzać workflow przez Claude Desktop

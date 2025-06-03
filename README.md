@@ -5,7 +5,7 @@
 **Problem:** Telegram Bot API wymaga HTTPS URL dla webhook, ale n8n na serwerze Mikrus generował tylko HTTP URL.
 
 **Rozwiązanie:** Konfiguracja hybrydowa gdzie:
-- **Główny n8n**: `http://joanna358.mikrus.xyz:20358` (OAuth, interfejs, API)  
+- **Główny n8n**: `http:// (OAuth, interfejs, API)  
 - **Webhook Telegram**: `https://[cloudflare-tunnel]` (tylko dla Telegram)
 
 ## 🏗️ Architektura rozwiązania
@@ -14,7 +14,7 @@
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
 │   Telegram      │    │  Cloudflare      │    │   Serwer        │
 │   Bot API       │────│  Tunnel (HTTPS)  │────│   Mikrus        │
-│                 │    │                  │    │   n8n:20358     │
+│                 │    │                  │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
                                                          │
 ┌─────────────────┐                                     │
@@ -26,19 +26,19 @@
 ## 📋 Aktualna konfiguracja (stan: 2 czerwca 2025)
 
 ### Serwer Mikrus
-- **Host**: `joanna358.mikrus.xyz`
-- **Port SSH**: `10358`  
-- **Port n8n**: `20358` (mapowany na 5678 w kontenerze)
-- **Dostęp SSH**: `ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz`
+- **Host**: `mikrus
+- **Port SSH**: 
+- **Port n8n**: `
+- **Dostęp SSH**: `ssh -i ~/.ssh/id_ed25519 
 
 ### n8n
-- **URL główny**: `http://joanna358.mikrus.xyz:20358`
+- **URL główny**: 
 - **Wersja**: `1.90.2`
 - **Kontener**: `n8nio/n8n:latest`
 - **Volume**: `~/.n8n:/home/node/.n8n`
 
 ### Cloudflare Tunnel  
-- **Aktualny URL**: `https://prototype-ds-constitute-efforts.trycloudflare.com`
+- **Aktualny URL**: `https://prototype-ds-constitute-efforts
 - **Status**: Tymczasowy (może się zmienić po restarcie)
 - **Log file**: `/tmp/cloudflared.log`
 - **PID file**: `/tmp/cloudflared.pid`
@@ -48,19 +48,19 @@
 ### 1. Sprawdź aktualny status
 ```bash
 # Sprawdź czy n8n działa
-ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz "docker ps | grep n8n"
+ssh -i ~/.ssh/id_ed25519 -p 
 
 # Sprawdź tunnel
-ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz "ps aux | grep cloudflared"
+ssh -i ~/.ssh/id_ed25519 -p 1
 ```
 
 ### 2. Sprawdź aktualny URL tunelu
 ```bash
-ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz "grep 'trycloudflare.com' /tmp/cloudflared.log | tail -1"
+ssh -i ~/.ssh/id_ed25519 -p 10358  "grep 'trycloudflare.com'  | tail -1"
 ```
 
 ### 3. Sprawdź webhook w n8n
-1. Idź do: `http://joanna358.mikrus.xyz:20358`
+1. Idź do: `mikrus`
 2. Otwórz workflow z Telegram Trigger
 3. Webhook URL powinien być: `https://[cloudflare-tunnel]/webhook/[hash]`
 
@@ -104,9 +104,8 @@ Uruchom pełną procedurę restartu - zobacz [Instrukcje techniczne](docs/instru
 
 ## 🔧 Szybkie komendy
 
-```bash
-# Status systemu
-curl -I http://joanna358.mikrus.xyz:20358
+```bash# Status systemu
+curl -I http://
 curl -I https://prototype-ds-constitute-efforts.trycloudflare.com
 
 # Sprawdź webhook w Telegram (zamień [TOKEN])
@@ -119,10 +118,10 @@ Jeśli nic nie działa:
 
 ```bash
 # 1. Zatrzymaj wszystko
-ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz "docker stop n8n && docker rm n8n && pkill cloudflared"
+ssh -i ~/.ssh/id_ed25519 -p xxxxx
 
 # 2. Uruchom tunnel (nowy URL)
-ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz "nohup cloudflared tunnel --url http://127.0.0.1:20358 > /tmp/cloudflared.log 2>&1 & sleep 15"
+ssh -i ~/.ssh/id_ed25519 -p xxxxx rootxxx "nohup cloudflared tunnel --url http://127.0.0.1:20358 > /tmp/cloudflared.log 2>&1 & sleep 15"
 
 # 3. Sprawdź nowy URL i uruchom n8n z nowym URL
 # Zobacz pełną procedurę w dokumentacji
@@ -130,10 +129,10 @@ ssh -i ~/.ssh/id_ed25519 -p 10358 root@joanna358.mikrus.xyz "nohup cloudflared t
 
 ## 🔗 Przydatne linki
 
-- **n8n Interface**: `http://joanna358.mikrus.xyz:20358`
-- **Aktualny tunnel**: `https://prototype-ds-constitute-efforts.trycloudflare.com`
+- **n8n Interface**: `http://xx.mikrus.xxxx'
+- **Aktualny tunnel**: `https://prototype-xxx`
 - **MCP API**: Zintegrowane z Claude Desktop (759 workflow dostępnych)
-- **GitHub Issues**: [Zgłoś problem](https://github.com/3rzy/n8n-telegram-webhook-guide/issues)
+- **GitHub Issues**: [Zgłoś problem]
 
 ---
 *Ostatnia aktualizacja: 2 czerwca 2025*  

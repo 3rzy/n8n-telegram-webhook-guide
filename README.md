@@ -1,3 +1,32 @@
+<!-- HYDRA_IDENTITY_CARD_START -->
+# n8n-telegram-webhook-guide
+
+## 🆔 Karta Tożsamości Repozytorium (Hydra Ecosystem)
+
+| Pole | Wartość |
+| :--- | :--- |
+| **Status repozytorium** | `LIBRARY` |
+| **Status komponentów** | `REUSABLE_KNOWLEDGE` |
+| **Cel** | Kompleksowy poradnik konfiguracji n8n z Telegram Webhook przy użyciu architektury hybrydowej (Cloudflare Tunnel dla webhooków HTTPS, bezpośrednie połączenie HTTP dla interfejsu n8n) na serwerze Mikrus. |
+| **Rola w ekosystemie** | Baza wiedzy inżynieryjnej i instrukcja ominięcia restrykcji SSL na serwerach bez publicznego IP / certyfikatu. |
+| **CURRENT (Stan bieżący)** | Pushed: 2025-06-03T03:31:16Z, HEAD SHA: 30181a5544858d8bbcfff54176db0bbe3e0ef6dc (commit date: 2025-06-03T03:31:16Z), root files count: 2. Weryfikacja: 2026-11-24 via GitHub REST API. |
+| **TARGET (Stan docelowy)** | Zachowanie jako biblioteka referencyjna; włączenie procedur do bazy wiedzy o serwerach VPS. |
+| **Zależności** | Mikrus VPS, n8n, Cloudflare Tunnel (cloudflared), Telegram Bot API. |
+| **Supersedes (Zastępuje)** | Brak. |
+| **Superseded by (Zastąpione przez)** | Brak. |
+| **Źródło prawdy** | Repozytorium GitHub: 3rzy/n8n-telegram-webhook-guide. |
+| **Owner** | Krzy (3rzy) |
+| **Ostatnia weryfikacja** | 2026-11-24 |
+
+### Klocki do ponownego wykorzystania (Reusable Blocks)
+Konfiguracja zmiennych środowiskowych n8n (WEBHOOK_URL, split listen), gotowe komendy tunelowania cloudflared.
+
+### Rekomendacja porządkowa
+PROPOSE_KEEP_AS_LIBRARY: Unikalna, sprawdzona wiedza rozwiązująca konkretny problem sieciowy.
+
+---
+<!-- HYDRA_IDENTITY_CARD_END -->
+
 # n8n Telegram Webhook - Rozwiązanie Hybrydowe HTTPS/HTTP
 
 ## 🎯 Podsumowanie problemu i rozwiązania

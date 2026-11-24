@@ -150,7 +150,7 @@ Jeśli nic nie działa:
 ssh -i ~/.ssh/id_ed25519 -p xxxxx
 
 # 2. Uruchom tunnel (nowy URL)
-ssh -i ~/.ssh/id_ed25519 -p xxxxx rootxxx "nohup cloudflared tunnel --url http://127.0.0.1:20358 > /tmp/cloudflared.log 2>&1 & sleep 15"
+ssh -i ~/.ssh/id_ed25519 -p xxxxx rootxxx "nohup cloudflared tunnel --url http://localhost:PORT > /tmp/cloudflared.log 2>&1 & sleep 15"
 
 # 3. Sprawdź nowy URL i uruchom n8n z nowym URL
 # Zobacz pełną procedurę w dokumentacji
